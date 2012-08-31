@@ -14,18 +14,18 @@ class window.EaselBoxCircle extends EaselBoxObject
                   images: [options.imgSrc],
                   frames: options.frames,
                 }     
-        bmpAnim = new BitmapAnimation(new SpriteSheet(data))
+        bmpAnim = new createjs.BitmapAnimation(new createjs.SpriteSheet(data))
         object = bmpAnim.clone()
         object.gotoAndPlay(options.startFrame | 0);
       else
-        object = new Bitmap(options.imgSrc)
+        object = new createjs.Bitmap(options.imgSrc)
 
       object.scaleX = options.scaleX || 1
       object.scaleY = options.scaleY || 1
       object.regX = radiusPixels
       object.regY = radiusPixels      
     else
-      object = new Shape()
+      object = new createjs.Shape()
       object.graphics.beginRadialGradientFill(["#F00","#00F"], [0.1, .9], 0, 0, 0, 0, 0, radiusPixels).drawCircle(0, 0, radiusPixels).beginFill("#FFF").drawRect(0, -1, radiusPixels, 2)
     
     super(object, box2dShape, options)     

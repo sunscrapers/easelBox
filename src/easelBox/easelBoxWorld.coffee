@@ -6,14 +6,17 @@ class window.EaselBoxWorld
   constructor: (@callingObj, frameRate, canvas, debugCanvas, gravityX, gravityY, @pixelsPerMeter) -> 
     PIXELS_PER_METER = @pixelsPerMeter
     
-    Ticker.addListener this # set up timing loop -- obj must supply a tick() method
-    Ticker.setFPS frameRate
+    createjs.Ticker.addListener this # set up timing loop -- obj must supply a tick() method
+    createjs.Ticker.setFPS frameRate
+    
+    @xOffset = 0
+    @yOffset = 0
                  
     # set up Box2d
     @box2dWorld = new Box2D.Dynamics.b2World(new Box2D.Common.Math.b2Vec2(gravityX, gravityY), true)
 
     # set up EaselJS
-    @easelStage = new Stage(canvas)        
+    @easelStage = new createjs.Stage(canvas)        
 
     # array of entities to update later
     @objects = []
@@ -36,6 +39,7 @@ class window.EaselBoxWorld
 
     @easelStage.addChild object.easelObj
     object.body = @box2dWorld.CreateBody(object.bodyDef)
+    object.body.SetUserData(object)
     object.body.CreateFixture(object.fixDef)
     object.setType(options.type || 'dynamic')
     object.setState(options)
@@ -48,17 +52,17 @@ class window.EaselBoxWorld
     @easelStage.removeChild(object.easelObj)
      
   addImage: (imgSrc, options) ->
-    obj = new Bitmap(imgSrc)
+    obj = new createjs.Bitmap(imgSrc)
     for property, value of options
       obj[property] = value
     @easelStage.addChild obj
 
   tick: ->
-    if Ticker.getMeasuredFPS() > minFPS
-      @box2dWorld.Step (1 / Ticker.getMeasuredFPS()), 10, 10 
+    if createjs.Ticker.getMeasuredFPS() > minFPS
+      @box2dWorld.Step (1 / createjs.Ticker.getMeasuredFPS()), 10, 10 
       @box2dWorld.ClearForces()
       for object in @objects
-        object.update()
+        object.update(@xOffset, @yOffset)
     
     # check to see if main object has a callback for each tick
     if typeof @callingObj.tick == 'function'
@@ -68,4 +72,8 @@ class window.EaselBoxWorld
     @box2dWorld.DrawDebugData()
   
   vector: (x, y) ->
-    new Box2D.Common.Math.b2Vec2(x, y)  
+    new Box2D.Common.Math.b2Vec2(x, y)
+    
+  moveViewport: (x, y) ->
+    @xOffset += x
+    @yOffset += y

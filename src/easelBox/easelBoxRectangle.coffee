@@ -15,16 +15,16 @@ class window.EaselBoxRectangle extends EaselBoxObject
                   images: [options.imgSrc],
                   frames: options.frames,
                 }     
-        bmpAnim = new BitmapAnimation(new SpriteSheet(data))
+        bmpAnim = new createjs.BitmapAnimation(new createjs.SpriteSheet(data))
         object = bmpAnim.clone()
         object.gotoAndPlay(options.startFrame | 0);
       else
-        object = new Bitmap(options.imgSrc)
+        object = new createjs.Bitmap(options.imgSrc)
       
       object.regX = widthPixels / 2
       object.regY = heightPixels / 2
     else
-      object = new Shape()
+      object = new createjs.Shape()
       object.graphics.beginLinearGradientFill(["#F00","#00F"], [0, 0.5], -widthPixels/2, 0, widthPixels, 0).drawRect(-widthPixels/2, -heightPixels/2, widthPixels, heightPixels)      
     
     super(object, box2dShape, options)    

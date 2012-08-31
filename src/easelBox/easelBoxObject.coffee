@@ -16,9 +16,9 @@ class window.EaselBoxObject
     @body = null
   
   # update canvas position based on physical position
-  update: ->
-    @easelObj.x = @body.GetPosition().x * PIXELS_PER_METER
-    @easelObj.y = @body.GetPosition().y * PIXELS_PER_METER
+  update: (xOffset=0, yOffset=0) ->
+    @easelObj.x = @body.GetPosition().x * PIXELS_PER_METER + xOffset
+    @easelObj.y = @body.GetPosition().y * PIXELS_PER_METER + yOffset
     @easelObj.rotation = @body.GetAngle() * (180 / Math.PI)
     
   setType: (type) ->
